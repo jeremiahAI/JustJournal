@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapter.EntryViewHolder> {
-    ArrayList<JournalEntry> mEntries;
-    EntryClickListener mEntryClickListener;
+    private List<JournalEntry> mEntries;
+    private EntryClickListener mEntryClickListener;
 
-    JournalEntryAdapter(ArrayList<JournalEntry> entries, EntryClickListener EntryClickListener) {
-        mEntries = entries;
+
+    JournalEntryAdapter(EntryClickListener EntryClickListener) {
         mEntryClickListener = EntryClickListener;
     }
 
@@ -24,7 +25,7 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
         TextView mTitle, mContentSummary, mDateCreated, mLastModified;
 
 
-        public EntryViewHolder(View itemView) {
+        EntryViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.entry_title);
             mContentSummary = itemView.findViewById(R.id.entry_summary);
@@ -49,15 +50,30 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
 
     @Override
     public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
-        holder.mTitle.setText(mEntries.get(position).getTitle());
-        // Todo: change content to content summary
-        holder.mContentSummary.setText(mEntries.get(position).getContent());
+        if (mEntries != null) {
+            holder.mTitle.setText(mEntries.get(position).getTitle());
+            holder.mContentSummary.setText(mEntries.get(position).getContentSummary());
+            holder.mLastModified.setText(mEntries.get(position).getDateLastModifiedString());
+            holder.mDateCreated.setText(mEntries.get(position).getDateCreatedString());
+        } else {
+            holder.mTitle.setText("");
+            holder.mContentSummary.setText("Add new entry...");
+            holder.mLastModified.setText("");
+            holder.mDateCreated.setText("");
+        }
     }
 
+    public void setEntries(List<JournalEntry> entries) {
+        this.mEntries = entries;
+        notifyDataSetChanged();
+    }
 
+    // getItemCount() is called many times, and when it is first called,
+    // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        return mEntries.size();
+        if (mEntries != null) return mEntries.size();
+        else return 0;
     }
 
     public interface EntryClickListener {
