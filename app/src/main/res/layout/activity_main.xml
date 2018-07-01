@@ -6,26 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/entries_rv">
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign out"
-        android:id="@+id/sign_out" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/entries_rv">
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="32dp"
-        android:src="@drawable/ic_quill_drawing_a_line"
-        app:fabSize="normal"
-        android:id="@+id/new_entry_button" />
+            </android.support.v7.widget.RecyclerView>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign out"
+                android:id="@+id/sign_out" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="32dp"
+                android:src="@drawable/ic_quill_drawing_a_line"
+                app:fabSize="normal"
+                android:id="@+id/new_entry_button" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/journal_entry_fragment_container"
+
+        />
 
 </FrameLayout>

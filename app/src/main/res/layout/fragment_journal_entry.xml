@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    tools:context=".JournalEntryFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/entry_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/big_padding"
+            android:layout_marginTop="@dimen/big_padding"
+            android:hint="@string/hint_entry"
+            android:inputType="textAutoComplete"
+            android:padding="@dimen/small_padding"
+            android:text="Thinking out loud"
+            android:textSize="18sp"
+            app:fontFamily="sans-serif-light" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/entry_page_action_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="32dp"
+        android:src="@drawable/ic_done_white_24dp"
+        app:fabSize="normal" />
+
+</FrameLayout>

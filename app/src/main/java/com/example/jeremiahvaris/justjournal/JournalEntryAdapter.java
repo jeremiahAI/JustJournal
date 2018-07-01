@@ -36,7 +36,8 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
 
         @Override
         public void onClick(View view) {
-            mEntryClickListener.onEntryClicked(getAdapterPosition());
+            mEntryClickListener.onEntryClicked(getAdapterPosition(),
+                    getClickedEntry(getAdapterPosition()));
         }
     }
 
@@ -77,6 +78,10 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
     }
 
     public interface EntryClickListener {
-        void onEntryClicked(int index);
+        void onEntryClicked(int index, JournalEntry entry);
+    }
+
+    private JournalEntry getClickedEntry(int index) {
+        return mEntries.get(index);
     }
 }

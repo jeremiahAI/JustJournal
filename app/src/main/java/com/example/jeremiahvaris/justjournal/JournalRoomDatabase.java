@@ -8,7 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {JournalEntry.class}, version = 2)
+@Database(entities = {JournalEntry.class}, version = 3)
 public abstract class JournalRoomDatabase extends RoomDatabase {
 
     public abstract EntryDao entryDao();

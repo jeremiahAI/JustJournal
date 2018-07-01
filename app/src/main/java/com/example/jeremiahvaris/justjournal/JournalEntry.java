@@ -6,19 +6,19 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity(tableName = "entries_table")
-public class JournalEntry {
-    @PrimaryKey(autoGenerate = true)
-    private int _Id;
+public class JournalEntry implements Serializable {
 
     @ColumnInfo(name = "Title")
     private String mTitle;
     @ColumnInfo(name = "Content")
     private String mContent;
+    @PrimaryKey
     @ColumnInfo(name = "Date Created")
     private long mDateCreated;
     @ColumnInfo(name = "Date Modified")
@@ -83,9 +83,7 @@ public class JournalEntry {
         }
     }
 
-    public int get_Id() {
-        return _Id;
-    }
+
 
     public String getDateLastModifiedString() {
         long timeDifference = System.currentTimeMillis() - mDateLastModified;
@@ -98,6 +96,7 @@ public class JournalEntry {
 
     public void setContent(String mContent) {
         this.mContent = mContent;
+        // Set the last modified date to current time
         setDateLastModified(NEW_ENTRY_DATE_TAG);
     }
 
@@ -119,10 +118,7 @@ public class JournalEntry {
     public void setTitle(String title) {
         if (title == null | title.isEmpty()) this.mTitle = "Untitled";
         else this.mTitle = title;
+        // Set the last modified date to current time
         setDateLastModified(NEW_ENTRY_DATE_TAG);
-    }
-
-    public void set_Id(int _Id) {
-        this._Id = _Id;
     }
 }

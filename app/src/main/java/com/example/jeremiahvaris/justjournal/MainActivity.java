@@ -3,16 +3,18 @@ package com.example.jeremiahvaris.justjournal;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -29,14 +31,14 @@ public class MainActivity extends AppCompatActivity
         implements JournalEntryAdapter.EntryClickListener {
     // Intent Request codes
     private static final int RC_SIGN_IN = 1;
-    private static final int JOURNAL_ENTRY_ACTIVITY_REQUEST_CODE = 2;
+    private static final int NEW_JOURNAL_ENTRY_REQUEST_CODE = 2;
 
     RecyclerView mEntriesList;
     JournalEntryAdapter mAdapter;
     List<JournalEntry> mEntries;
     FloatingActionButton newEntryButton;
     Button signout;
-    JournalEntryViewModel mJournalEntryViewModel;
+    JournalEntriesViewModel mJournalEntriesViewModel;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mEntriesFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
@@ -48,13 +50,13 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == JOURNAL_ENTRY_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == NEW_JOURNAL_ENTRY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 JournalEntry entry =
                         new JournalEntry("Untitled",
                                 data.getStringExtra(JournalEntryActivity.EXTRA_REPLY));
                 Toast.makeText(this, entry.getContentSummary(), Toast.LENGTH_LONG).show();
-                mJournalEntryViewModel.insert(entry);
+                mJournalEntriesViewModel.insert(entry);
                 mEntriesFirebaseDatabaseReference.push().setValue(entry);
             } else {
                 Toast.makeText(getApplicationContext(), "Entry empty, not saved", Toast.LENGTH_LONG)
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setLogo(R.drawable.ic_quill_drawing_a_line);
+
+
         mEntriesList = (RecyclerView) findViewById(R.id.entries_rv);
         mEntriesList.setHasFixedSize(true);
 
@@ -97,16 +102,15 @@ public class MainActivity extends AppCompatActivity
          *
          */
 
-        mJournalEntryViewModel = ViewModelProviders.of(this)
-                .get(JournalEntryViewModel.class);
+        mJournalEntriesViewModel = ViewModelProviders.of(this)
+                .get(JournalEntriesViewModel.class);
 
-        // Observe changes to the Journal Database
-        mJournalEntryViewModel.getAllEntries().observe(this, new Observer<List<JournalEntry>>() {
+        // Observe changes to the Journal Database and update the adapter accordingly
+        mJournalEntriesViewModel.getAllEntries().observe(this, new Observer<List<JournalEntry>>() {
             @Override
             public void onChanged(@Nullable List<JournalEntry> journalEntries) {
-                mEntries = mJournalEntryViewModel.getAllEntries().getValue();
+                mEntries = mJournalEntriesViewModel.getAllEntries().getValue();
                 mAdapter.setEntries(mEntries);
-                Toast.makeText(MainActivity.this, "Entries changed", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -115,8 +119,14 @@ public class MainActivity extends AppCompatActivity
         newEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newEntry = new Intent(MainActivity.this, JournalEntryActivity.class);
-                startActivityForResult(newEntry, JOURNAL_ENTRY_ACTIVITY_REQUEST_CODE);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.journal_entry_fragment_container,
+                                new JournalEntryFragment())
+                        .addToBackStack("Add entry")
+                        .commit();
+
+//                Intent newEntry = new Intent(MainActivity.this, JournalEntryActivity.class);
+//                startActivityForResult(newEntry, NEW_JOURNAL_ENTRY_REQUEST_CODE);
             }
         });
 
@@ -166,9 +176,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onEntryClicked(int index) {
-        // Todo: Go to Edit Activity
-        Toast.makeText(this, "Item " + (index + 1) + " clicked", Toast.LENGTH_SHORT).show();
+    public void onEntryClicked(int index, JournalEntry entry) {
+        // Todo: Go to Edit Fragment
+//        Toast.makeText(this, "Item " + (index + 1) + " clicked", Toast.LENGTH_SHORT).show();
+
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(JournalEntryFragment.ENTRY, entry);
+//        JournalEntry putEntry = (JournalEntry)arguments.getSerializable(JournalEntryFragment.ENTRY);
+//        Toast.makeText(this, putEntry.getContentSummary(), Toast.LENGTH_SHORT).show();
+        Fragment editFragment = new JournalEntryFragment();
+        editFragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.journal_entry_fragment_container, editFragment)
+                .addToBackStack("Edit entry")
+                .commit();
     }
 
 

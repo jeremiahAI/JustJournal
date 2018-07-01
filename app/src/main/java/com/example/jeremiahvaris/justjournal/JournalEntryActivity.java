@@ -39,12 +39,10 @@ public class JournalEntryActivity extends AppCompatActivity {
                 Intent replyIntent = new Intent();
                 if (TextUtils.isEmpty(mEntryContentView.getText())) {
                     setResult(RESULT_CANCELED, replyIntent);
-//                    Toast.makeText(JournalEntryActivity.this,"Resulst cancelled",Toast.LENGTH_LONG).show();
                 } else {
                     String entryContent = mEntryContentView.getText().toString();
                     replyIntent.putExtra(EXTRA_REPLY, entryContent);
                     setResult(RESULT_OK, replyIntent);
-//                    Toast.makeText(JournalEntryActivity.this,"Resulst sent",Toast.LENGTH_LONG).show();
                 }
                 finish();
             }
