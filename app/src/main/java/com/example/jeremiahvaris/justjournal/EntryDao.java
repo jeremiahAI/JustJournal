@@ -19,7 +19,7 @@ public interface EntryDao {
     int deleteEntries(JournalEntry... entries);
 
 
-    @Query("SELECT * from entries_table ORDER BY mDateLastModified ASC")
+    @Query("SELECT * from entries_table ORDER BY `Date Modified` ASC")
     LiveData<List<JournalEntry>> getAllEntries();
 
     @Query("DELETE FROM entries_table")

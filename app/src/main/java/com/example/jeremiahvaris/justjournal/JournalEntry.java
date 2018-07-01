@@ -21,6 +21,7 @@ public class JournalEntry {
     private String mContent;
     @ColumnInfo(name = "Date Created")
     private long mDateCreated;
+    @ColumnInfo(name = "Date Modified")
     private long mDateLastModified;
 
 
@@ -104,8 +105,7 @@ public class JournalEntry {
         if (dateCreated == NEW_ENTRY_DATE_TAG) {
             Date currentDate = new Date();
             this.mDateCreated = currentDate.getTime();
-        }
-        this.mDateCreated = dateCreated;
+        } else this.mDateCreated = dateCreated;
     }
 
 
@@ -113,8 +113,7 @@ public class JournalEntry {
         if (dateLastModified == NEW_ENTRY_DATE_TAG) {
             Date currentDate = new Date();
             this.mDateLastModified = currentDate.getTime();
-        }
-        this.mDateCreated = dateLastModified;
+        } else this.mDateCreated = dateLastModified;
     }
 
     public void setTitle(String title) {
